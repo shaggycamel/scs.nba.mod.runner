@@ -1,0 +1,22 @@
+[project]
+name = "scs-mod-runner"
+version = "0.1.0"
+description = "Run scs.nba.mod model repos from util.update_schedule"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "polars>=1.44.1",
+    "scs-hub",
+    "scs-runner",
+]
+
+[tool.uv.sources]
+scs-hub = { git = "https://github.com/shaggycamel/scs.scs_hub.git" }
+scs-runner = { git = "https://github.com/shaggycamel/scs.scs_runner.git", branch = "main" }
+
+[dependency-groups]
+dev = ["pytest>=8"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
