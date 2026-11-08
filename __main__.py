@@ -60,7 +60,9 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Print the resolved plan without running anything",
     )
-    parser.add_argument("--no-alert", action="store_true", help="Do not send failure email")
+    parser.add_argument(
+        "--no-alert", action="store_true", help="Do not send failure email"
+    )
     parser.add_argument("--verbose", action="store_true", help="Debug logging")
     return parser
 
@@ -174,9 +176,7 @@ def main(argv: list[str] | None = None) -> int:
         logger.error(
             "failed tasks: %s",
             [
-                f"{failure.source}:{failure.task}"
-                if failure.source
-                else failure.task
+                f"{failure.source}:{failure.task}" if failure.source else failure.task
                 for failure in result.failures
             ],
         )

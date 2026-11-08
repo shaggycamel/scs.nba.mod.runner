@@ -133,7 +133,7 @@ def test_build_tasks_and_ssh_round_trip(tmp_path):
     )
     fake_ssh = tmp_path / "fake-ssh"
     fake_ssh.write_text(
-        "#!/bin/sh\nfor last; do :; done\nexec sh -c \"$last\"\n",
+        '#!/bin/sh\nfor last; do :; done\nexec sh -c "$last"\n',
         encoding="utf-8",
     )
     fake_ssh.chmod(0o755)

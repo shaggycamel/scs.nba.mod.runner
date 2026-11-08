@@ -37,9 +37,7 @@ def load_config() -> Config:
         db_section=env.get("SCS_MOD_DB_SECTION", "cockroach-write"),
         ini_path=env.get("SCS_HUB_CREDENTIALS") or None,
         host=env.get("SCS_MOD_HOST", "jetson"),
-        base_path=env.get(
-            "SCS_MOD_BASE_PATH", "/home/oli/shaggy_camel_sports/nba/mod"
-        ),
+        base_path=env.get("SCS_MOD_BASE_PATH", "/home/oli/shaggy_camel_sports/nba/mod"),
         remote_path=env.get(
             "SCS_MOD_REMOTE_PATH",
             "/home/oli/.local/bin:/usr/local/bin:/usr/bin:/bin",

@@ -48,7 +48,9 @@ def query_schedule(
     else:
         if not all_cadences:
             if not cadences:
-                raise ValueError("query_schedule needs at least one cadence or all_cadences")
+                raise ValueError(
+                    "query_schedule needs at least one cadence or all_cadences"
+                )
             placeholders = []
             for index, value in enumerate(cadences):
                 key = f"cadence{index}"
@@ -61,7 +63,7 @@ def query_schedule(
     sql = f"""
         SELECT associated_function, cadence, schema_sequence, pause
         FROM util.update_schedule
-        WHERE {' AND '.join(clauses)}
+        WHERE {" AND ".join(clauses)}
         ORDER BY schema_sequence NULLS LAST, associated_function
     """
     options = {"execute_options": {"parameters": params}} if params else {}
