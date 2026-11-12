@@ -16,6 +16,7 @@ from scs_runner import Failure, failure_alert, run_sources, send_failure_email
 from config import load_config
 from runner import (
     build_tasks,
+    build_view_task,
     format_plan,
     make_log_writer,
     parse_kickoff,
@@ -137,6 +138,17 @@ def main(argv: list[str] | None = None) -> int:
 
     try:
         tasks, targets = build_tasks(rows, config)
+        order = None
+        if config.apply_views:
+            view_task, view_target = build_view_task(config)
+            tasks.append(view_task)
+            targets[view_task.source] = view_target
+            order = list(
+                dict.fromkeys(
+                    task.source for task in tasks if task.source != view_task.source
+                )
+            )
+            order.append(view_task.source)
     except Exception as exc:
         error = f"{type(exc).__name__}: {exc}"
         logger.exception("invalid model schedule")
@@ -159,6 +171,7 @@ def main(argv: list[str] | None = None) -> int:
             cadence=cadence_label,
             write_log=make_log_writer(hub),
             targets=targets,
+            order=order,
             job_kickoff=parse_kickoff(),
             alert=alert,
             bookends=config.bookends,

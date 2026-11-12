@@ -30,7 +30,14 @@ uv run --frozen --group data python __main__.py
 ```
 
 The repo writes `SCS_RESULT_FILE` with `{"row_count": n}`. The runner writes
-`process start`, one task row, and `process end` to `util.update_log`.
+`process start`, one task row per model repo, and `process end` to
+`util.update_log`; it then applies the mod views as a separate local task.
+
+## Views
+
+After the model tasks finish, the runner applies
+`<database_path>/sql/views/mod/*_vw.sql` through the local database checkout
+and regrants `kobe_public`. Model repos write only their `_base` tables.
 
 ## Run
 
@@ -76,6 +83,9 @@ Environment variables:
 | `SCS_MOD_BOOKENDS` | `source` | `source`, `run` or `none` |
 | `SCS_MOD_REMOTE_CREDENTIALS` | unset | optional `SCS_HUB_CREDENTIALS` path on the Jetson |
 | `SCS_MOD_SSH_BINARY` | `ssh` | SSH binary (tests can substitute a fake) |
+| `SCS_MOD_DATABASE_PATH` | `/home/oli/shaggy_camel_sports/nba/database` | database checkout that owns the mod view SQL |
+| `SCS_MOD_VIEWS_SCHEMA` | `mod` | schema applied after the run |
+| `SCS_MOD_APPLY_VIEWS` | `1` | set `0` to skip the view apply step |
 
 SSH options are `BatchMode=yes`, `ConnectTimeout=30` and
 `ServerAliveInterval=30`. Put the host, user and key in the NUC's

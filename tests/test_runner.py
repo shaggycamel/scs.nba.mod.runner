@@ -4,7 +4,13 @@ import sys
 from scs_runner import run_sources
 
 from config import Config
-from runner import build_tasks, format_plan, query_schedule, repo_name
+from runner import (
+    build_tasks,
+    build_view_task,
+    format_plan,
+    query_schedule,
+    repo_name,
+)
 
 
 class FakeFrame:
@@ -176,6 +182,23 @@ def test_build_tasks_and_ssh_round_trip(tmp_path):
     ]
     assert rows[1]["source"] == "scs.nba.mod.player_archetypes"
     assert rows[1]["row_count"] == 11
+
+
+def test_build_view_task_targets_the_database_repo():
+    config = Config(
+        database_path="/srv/nba/database",
+        db_section="postgres",
+    )
+
+    task, target = build_view_task(config)
+
+    assert task.task == "views.apply"
+    assert task.source == "scs.nba.mod.runner"
+    assert "scripts/apply_views.py" in task.command
+    assert "--schema mod" in task.command
+    assert "--db-con postgres" in task.command
+    assert not target.is_remote
+    assert str(target.root) == "/srv/nba/database"
 
 
 def test_format_plan_includes_remote_location():

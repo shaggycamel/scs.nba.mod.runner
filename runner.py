@@ -5,6 +5,7 @@ from __future__ import annotations
 import logging
 import os
 import posixpath
+import shlex
 from collections.abc import Mapping, Sequence
 from datetime import UTC, datetime
 from typing import Any
@@ -113,6 +114,22 @@ def build_tasks(
         )
 
     return tasks, targets
+
+
+def build_view_task(config: Config) -> tuple[Task, Target]:
+    """The local task that applies the central mod views after the model jobs."""
+    command = (
+        'uv run --frozen python scripts/apply_views.py '
+        f'--schema {shlex.quote(config.views_schema)} '
+        f'--db-con {shlex.quote(config.db_section)}'
+    )
+    task = Task(
+        source=config.source_label,
+        task="views.apply",
+        command=command,
+        sequence=10_000,
+    )
+    return task, Target.local(config.database_path)
 
 
 def make_log_writer(hub: Any):
