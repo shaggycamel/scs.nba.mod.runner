@@ -95,7 +95,9 @@ def test_build_tasks_derives_source_task_and_remote_target():
     assert len(tasks) == 1
     assert tasks[0].source == "scs.nba.mod.player_archetypes"
     assert tasks[0].task == "player_archetypes.job"
-    assert tasks[0].command == "uv run --frozen python __main__.py"
+    assert (
+        tasks[0].command == "uv run --frozen python __main__.py --db-con jetson-write"
+    )
     assert tasks[0].timeout_seconds == 123
     target = targets["scs.nba.mod.player_archetypes"]
     assert target.host == "jetson"

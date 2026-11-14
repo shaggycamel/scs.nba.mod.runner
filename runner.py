@@ -104,11 +104,15 @@ def build_tasks(
             ssh_binary=config.ssh_binary,
             environment=target_env,
         )
+        command = config.entrypoint
+        if "--db-con" not in command:
+            command += f" --db-con {shlex.quote(config.db_section)}"
+
         tasks.append(
             Task(
                 source=source,
                 task=f"{repo}.job",
-                command=config.entrypoint,
+                command=command,
                 cadence=_opt_str(row.get("cadence")),
                 sequence=_opt_int(row.get("schema_sequence")),
                 pause=_bool(row.get("pause")),
