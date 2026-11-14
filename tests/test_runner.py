@@ -79,6 +79,7 @@ def test_build_tasks_derives_source_task_and_remote_target():
         remote_path="/usr/local/bin:/usr/bin",
         entrypoint="uv run --frozen python __main__.py",
         default_timeout=123,
+        db_section="jetson-write",
     )
     rows = [
         {
@@ -99,7 +100,10 @@ def test_build_tasks_derives_source_task_and_remote_target():
     target = targets["scs.nba.mod.player_archetypes"]
     assert target.host == "jetson"
     assert target.root == "/srv/nba/mod/player_archetypes"
-    assert target.environment == {"PATH": "/usr/local/bin:/usr/bin"}
+    assert target.environment == {
+        "PATH": "/usr/local/bin:/usr/bin",
+        "SCS_MOD_DB_SECTION": "jetson-write",
+    }
 
 
 def test_build_tasks_rejects_duplicate_sources():

@@ -90,7 +90,10 @@ def build_tasks(
         if source in targets:
             raise ValueError(f"duplicate model row for {source!r}")
 
-        target_env = {"PATH": config.remote_path}
+        target_env = {
+            "PATH": config.remote_path,
+            "SCS_MOD_DB_SECTION": config.db_section,
+        }
         if config.remote_credentials:
             target_env["SCS_HUB_CREDENTIALS"] = config.remote_credentials
 
@@ -119,9 +122,9 @@ def build_tasks(
 def build_view_task(config: Config) -> tuple[Task, Target]:
     """The local task that applies the central mod views after the model jobs."""
     command = (
-        'uv run --frozen python scripts/apply_views.py '
-        f'--schema {shlex.quote(config.views_schema)} '
-        f'--db-con {shlex.quote(config.db_section)}'
+        "uv run --frozen python scripts/apply_views.py "
+        f"--schema {shlex.quote(config.views_schema)} "
+        f"--db-con {shlex.quote(config.db_section)}"
     )
     task = Task(
         source=config.source_label,
