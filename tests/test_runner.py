@@ -227,3 +227,13 @@ def test_format_plan_includes_remote_location():
     assert "jetson:/srv/nba/mod/player_archetypes" in plan
     assert "player_archetypes.job" not in plan
     assert "uv run" in plan
+
+
+def test_query_schedule_orders_by_function_sequence():
+    hub = FakeHub()
+    query_schedule(hub, cadences=["intraday"])
+
+    assert (
+        "ORDER BY schema_sequence NULLS LAST, function_sequence NULLS LAST, "
+        "associated_function" in hub.db.sql
+    )

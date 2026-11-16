@@ -62,10 +62,10 @@ def query_schedule(
             clauses.append("pause IS NOT TRUE")
 
     sql = f"""
-        SELECT associated_function, cadence, schema_sequence, pause
+        SELECT associated_function, cadence, schema_sequence, function_sequence, pause
         FROM util.update_schedule
         WHERE {" AND ".join(clauses)}
-        ORDER BY schema_sequence NULLS LAST, associated_function
+        ORDER BY schema_sequence NULLS LAST, function_sequence NULLS LAST, associated_function
     """
     options = {"execute_options": {"parameters": params}} if params else {}
     return hub.db.read(sql, **options).to_dicts()
