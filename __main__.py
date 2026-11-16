@@ -135,9 +135,11 @@ def main(argv: list[str] | None = None) -> int:
         )
         return 0
 
-    order = None
     try:
         tasks, targets = build_tasks(rows, config)
+        # scs_runner sorts sources alphabetically when it has no order. Preserve
+        # the schedule's order so function_sequence decides the dependency.
+        order = list(dict.fromkeys(task.source for task in tasks))
     except Exception as exc:
         error = f"{type(exc).__name__}: {exc}"
         logger.exception("invalid model schedule")
