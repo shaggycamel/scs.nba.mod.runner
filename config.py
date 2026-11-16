@@ -20,9 +20,6 @@ class Config:
     bookends: str = "source"
     remote_credentials: str | None = None
     ssh_binary: str = "ssh"
-    database_path: str = "/home/oli/shaggy_camel_sports/nba/database"
-    views_schema: str = "mod"
-    apply_views: bool = True
     ssh_options: tuple[str, ...] = (
         "-o",
         "BatchMode=yes",
@@ -54,11 +51,4 @@ def load_config() -> Config:
         bookends=env.get("SCS_MOD_BOOKENDS", "source"),
         remote_credentials=env.get("SCS_MOD_REMOTE_CREDENTIALS") or None,
         ssh_binary=env.get("SCS_MOD_SSH_BINARY", "ssh"),
-        database_path=env.get(
-            "SCS_MOD_DATABASE_PATH",
-            "/home/oli/shaggy_camel_sports/nba/database",
-        ),
-        views_schema=env.get("SCS_MOD_VIEWS_SCHEMA", "mod"),
-        apply_views=env.get("SCS_MOD_APPLY_VIEWS", "1").lower()
-        not in {"0", "false", "no"},
     )

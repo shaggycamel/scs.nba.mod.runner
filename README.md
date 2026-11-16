@@ -31,13 +31,13 @@ uv run --frozen --group data python __main__.py
 
 The repo writes `SCS_RESULT_FILE` with `{"row_count": n}`. The runner writes
 `process start`, one task row per model repo, and `process end` to
-`util.update_log`; it then applies the mod views as a separate local task.
+`util.update_log`.
 
 ## Views
 
-After the model tasks finish, the runner applies
-`<database_path>/sql/views/mod/*_vw.sql` through the local database checkout
-and regrants `kobe_public`. Model repos write only their `_base` tables.
+Model repos write only their `_base` tables. The public `mod.*_vw` views are
+applied from `nba/database` with `deploy/apply_views.sh` when their DDL changes;
+the runner does not touch them.
 
 ## Run
 
